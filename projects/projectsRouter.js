@@ -2,12 +2,10 @@ const express = require('express');
 
 const Projects = require("../data/helpers/projectModel");
 
-const Actions = require("../data/helpers/actionModel");
-
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    Projects.get(req.query)
+    Projects.get(req.db)
         .then(projects => {
             res.status(200).json(projects);
         })
@@ -59,7 +57,7 @@ router.put("/:id", validateProject, validateProjectId, (req, res) => {
 router.delete("/:id", validateProjectId,(req, res) => {
     Projects.remove(req.params.id)
         .then(project => {
-            res.status(200).json(project);
+            res.send({ message: "Project deleted successfully."}).status(200).json(project);
         })
         .catch(error => {
             console.log(error);

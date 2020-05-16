@@ -17,15 +17,14 @@ router.get('/:id', validateActionId, (req, res) => {
         })
 });
 
-router.post('/:id/actions', validateAction, (req, res) => {
-    const project = {...req.body, user_id: req.params.id};
-    Actions.insert(project)
+router.post('/', validateAction, (req, res) => {
+    Actions.insert(req.body)
         .then(action => {
             res.status(201).json(action);
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({ error: "There was an error while saving the action to the database"})
+            res.status(500).json({ error: "There was an error while saving the action to the project"})
         })
 })
 
@@ -45,7 +44,7 @@ router.put('/:id', validateActionId, validateAction, (req, res) => {
 router.delete('/:id', validateActionId, (req, res) => {
     Actions.remove(req.params.id)
         .then(action => {
-            res.status(200).json(action);
+            res.send({ message: "Action deleted successfully."}).status(200).json(action);
         })
         .catch(error => {
             console.log(error);
@@ -72,7 +71,7 @@ function validateActionId (req, res, next) {
 function validateAction (req, res, next) {
     if (Object.keys(req.body).length === 0) {
       res.status(400).json({ message: "Missing required action information"})
-    } else if (!req.body.description && !req.body.notes) {
+    } else if (!req.body.project_id && !req.body.description && !req.body.notes) {
       res.status(400).json({ message: "Missing action description and notes"})
     } else if (req.body) {
       return next()
