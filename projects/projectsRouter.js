@@ -104,6 +104,6 @@ function validateProject (req, res, next) {
     } else if (req.body) {
       return next()
     }
-  }
+}
 
 module.exports = router;
